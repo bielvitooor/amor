@@ -138,17 +138,18 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:var(--body);backgro
 .intro-title{font-family:var(--display);font-size:34px;color:var(--pale);letter-spacing:.5px;line-height:1.1;margin-bottom:10px;position:relative;z-index:2}
 .intro-since{font-size:13px;color:rgba(255,255,255,.4);letter-spacing:2px;text-transform:uppercase;position:relative;z-index:2}
 
+
 /* ══════════════════════════════════
-   S2 — CARROSSEL
+   S1 — CARROSSEL
 ══════════════════════════════════ */
 .s-carousel{padding:0;overflow:hidden;background:var(--deep)}
-.carousel-wrap{position:absolute;inset:0}
-.car-slide{
-  position:absolute;inset:0;opacity:0;
-  transition:opacity .7s cubic-bezier(.4,0,.2,1);
-  background:var(--deep);
-}
-.car-slide.car-visible{opacity:1}
+/* Animations float ABOVE the photos */
+.s-carousel .story-bg{z-index:14}
+.carousel-wrap{position:absolute;inset:0;overflow:hidden;cursor:grab;touch-action:pan-y}
+.carousel-wrap.dragging{cursor:grabbing}
+/* Slide strip — swipe via transform */
+.car-strip{display:flex;height:100%;transition:transform .38s cubic-bezier(.4,0,.2,1);will-change:transform}
+.car-slide{flex:0 0 100%;width:100%;height:100%;position:relative;overflow:hidden;background:var(--deep)}
 .car-slide img{width:100%;height:100%;object-fit:cover;display:block}
 .car-slide .car-ph-fallback{
   width:100%;height:100%;
@@ -156,18 +157,20 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:var(--body);backgro
   display:flex;align-items:center;justify-content:center;
 }
 .car-slide .car-ph-fallback svg{width:60px;height:60px;opacity:.25;color:#fff}
-.car-slide::before{content:'';position:absolute;top:0;left:0;right:0;height:130px;background:linear-gradient(to bottom,rgba(14,0,13,.75),transparent);z-index:2;pointer-events:none}
-.car-slide::after{content:'';position:absolute;bottom:0;left:0;right:0;height:160px;background:linear-gradient(to top,rgba(14,0,13,.75),transparent);z-index:2;pointer-events:none}
-.car-label{
-  position:absolute;bottom:55px;left:0;right:0;text-align:center;
-  z-index:5;pointer-events:none;
-  font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;
-  color:rgba(255,255,255,.7);
-}
-.car-counter{position:absolute;bottom:34px;right:18px;font-size:10px;font-weight:700;letter-spacing:1px;color:rgba(255,255,255,.5);z-index:15}
-.car-dots{position:absolute;bottom:28px;left:0;right:0;display:flex;justify-content:center;gap:5px;z-index:10}
+.car-slide::before{content:'';position:absolute;top:0;left:0;right:0;height:160px;background:linear-gradient(to bottom,rgba(14,0,13,.8),transparent);z-index:2;pointer-events:none}
+.car-slide::after{content:'';position:absolute;bottom:0;left:0;right:0;height:200px;background:linear-gradient(to top,rgba(14,0,13,.9),transparent);z-index:2;pointer-events:none}
+/* Per-slide place label */
+.car-label{position:absolute;bottom:60px;left:0;right:0;text-align:center;z-index:5;pointer-events:none;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.75)}
+/* Static title overlay at top */
+.car-title{position:absolute;top:58px;left:0;right:0;z-index:20;pointer-events:none;text-align:center;padding:0 24px}
+.car-title-eyebrow{font-size:9px;font-weight:700;letter-spacing:3.5px;text-transform:uppercase;color:var(--petal);margin-bottom:3px;text-shadow:0 1px 8px rgba(0,0,0,.9)}
+.car-title-main{font-family:var(--display);font-size:26px;letter-spacing:-.5px;color:#fff;line-height:1.1;text-shadow:0 2px 16px rgba(0,0,0,.8),0 1px 4px rgba(0,0,0,.6)}
+/* Dots & counter above everything */
+.car-counter{position:absolute;bottom:34px;right:18px;font-size:10px;font-weight:700;letter-spacing:1px;color:rgba(255,255,255,.5);z-index:22}
+.car-dots{position:absolute;bottom:28px;left:0;right:0;display:flex;justify-content:center;gap:5px;z-index:22}
 .car-dot{height:5px;border-radius:3px;background:rgba(255,255,255,.35);transition:all .35s ease}
 .car-dot.active{background:#fff}
+
 
 /* ══════════════════════════════════
    S3 — DIAS
@@ -421,6 +424,11 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:var(--body);backgro
     <!-- S1: CARROSSEL -->
     <div class="story s-carousel" data-duration="0" data-trackname="Nosso Primeiro Beijo" id="s-carousel">
       <div class="story-bg" id="bg-s1"></div>
+      <!-- Title overlay -->
+      <div class="car-title">
+        <div class="car-title-eyebrow">alguns dos nossos</div>
+        <div class="car-title-main">MOMENTOS JUNTOS</div>
+      </div>
       <div class="carousel-wrap" id="carousel-wrap"></div>
       <div class="car-counter" id="car-counter"></div>
       <div class="car-dots" id="car-dots"></div>
@@ -730,15 +738,22 @@ class Carousel {
   constructor(wrap, dotsEl, counterEl, photos) {
     this.wrap = wrap; this.dotsEl = dotsEl; this.counterEl = counterEl;
     this.photos = photos; this.cur = 0; this.slides = []; this.dotEls = [];
-    this.timer = null; this.totalLoaded = 0; this.init();
+    this.timer = null; this.strip = null;
+    this.dragStartX = 0; this.dragging = false; this.dragDelta = 0;
+    this.init();
   }
   init() {
+    // Create the strip
+    this.strip = document.createElement('div');
+    this.strip.className = 'car-strip';
+    this.wrap.appendChild(this.strip);
+
     this.photos.forEach((p, i) => {
       const slide = document.createElement('div');
-      slide.className = 'car-slide' + (i === 0 ? ' car-visible' : '');
+      slide.className = 'car-slide';
       const img = document.createElement('img');
       img.src = p.src; img.alt = p.label || '';
-      img.addEventListener('load', () => this.totalLoaded++);
+      img.draggable = false;
       img.onerror = () => {
         img.style.display = 'none';
         const fb = document.createElement('div');
@@ -753,29 +768,87 @@ class Carousel {
         lbl.textContent = p.label.toUpperCase();
         slide.appendChild(lbl);
       }
-      this.wrap.appendChild(slide); this.slides.push(slide);
+      this.strip.appendChild(slide);
+      this.slides.push(slide);
+
       const dot = document.createElement('div');
       dot.className = 'car-dot' + (i === 0 ? ' active' : '');
       dot.style.width = i === 0 ? '18px' : '5px';
-      this.dotsEl.appendChild(dot); this.dotEls.push(dot);
+      this.dotsEl.appendChild(dot);
+      this.dotEls.push(dot);
     });
+
+    this.updateStrip(false);
+    this.updateCounter();
+    this.bindSwipe();
+  }
+
+  updateStrip(animate = true) {
+    this.strip.style.transition = animate
+      ? 'transform .38s cubic-bezier(.4,0,.2,1)'
+      : 'none';
+    this.strip.style.transform = `translateX(-${this.cur * 100}%)`;
+  }
+
+  updateCounter() {
+    this.counterEl.textContent = `${this.cur + 1} / ${this.photos.length}`;
+  }
+
+  updateDots() {
+    this.dotEls.forEach((d, i) => {
+      d.classList.toggle('active', i === this.cur);
+      d.style.width = i === this.cur ? '18px' : '5px';
+    });
+  }
+
+  goTo(i, animate = true) {
+    const n = this.photos.length;
+    const next = ((i % n) + n) % n;
+    if (next === this.cur) return;
+    this.cur = next;
+    this.updateStrip(animate);
+    this.updateDots();
     this.updateCounter();
   }
-  updateCounter() { this.counterEl.textContent = `${this.cur + 1} / ${this.photos.length}`; }
-  goTo(i) {
-    if (i === this.cur) return;
-    this.slides[this.cur].classList.remove('car-visible');
-    this.dotEls[this.cur].classList.remove('active');
-    this.dotEls[this.cur].style.width = '5px';
-    this.cur = ((i % this.photos.length) + this.photos.length) % this.photos.length;
-    this.slides[this.cur].classList.add('car-visible');
-    this.dotEls[this.cur].classList.add('active');
-    this.dotEls[this.cur].style.width = '18px';
-    this.updateCounter();
-  }
+
   next() { this.goTo(this.cur + 1); }
+  prev() { this.goTo(this.cur - 1); }
+
+  bindSwipe() {
+    const el = this.wrap;
+    let sx = 0, sy = 0, moved = false;
+
+    const onStart = (x, y) => { sx = x; sy = y; moved = false; this.dragging = true; el.classList.add('dragging'); };
+    const onMove  = (x, y) => {
+      if (!this.dragging) return;
+      const dx = x - sx, dy = y - sy;
+      if (!moved && Math.abs(dy) > Math.abs(dx)) { this.dragging = false; el.classList.remove('dragging'); return; }
+      moved = true;
+      // Live rubber-band translate
+      const pct = dx / el.offsetWidth * 100;
+      this.strip.style.transition = 'none';
+      this.strip.style.transform = `translateX(calc(-${this.cur * 100}% + ${pct}%))`;
+    };
+    const onEnd = (x) => {
+      if (!this.dragging) return;
+      this.dragging = false; el.classList.remove('dragging');
+      const dx = x - sx;
+      if (Math.abs(dx) > 45) { dx < 0 ? this.next() : this.prev(); }
+      else { this.updateStrip(true); }
+    };
+
+    el.addEventListener('touchstart', e => onStart(e.touches[0].clientX, e.touches[0].clientY), { passive: true });
+    el.addEventListener('touchmove',  e => onMove(e.touches[0].clientX, e.touches[0].clientY),  { passive: true });
+    el.addEventListener('touchend',   e => onEnd(e.changedTouches[0].clientX));
+
+    el.addEventListener('pointerdown', e => { el.setPointerCapture(e.pointerId); onStart(e.clientX, e.clientY); });
+    el.addEventListener('pointermove', e => { if (this.dragging) onMove(e.clientX, e.clientY); });
+    el.addEventListener('pointerup',   e => onEnd(e.clientX));
+    el.addEventListener('pointercancel', () => { this.dragging = false; el.classList.remove('dragging'); this.updateStrip(true); });
+  }
+
   start(ms = 2800) { this.stop(); this.timer = setInterval(() => this.next(), ms); }
-  stop() { clearInterval(this.timer); this.timer = null; }
+  stop()  { clearInterval(this.timer); this.timer = null; }
 }
 
 const carousel = new Carousel(

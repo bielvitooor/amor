@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Feliz Dia dos Namorados</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;border:none;background:none;-webkit-tap-highlight-color:transparent}
+button{cursor:pointer;font-family:inherit;outline:none}
+img{display:block;user-select:none}
+
+:root{
+  --deep:#0E000D;
+  --maroon:#38001F;
+  --velvet:#B01752;
+  --pink:#F03068;
+  --petal:#FF7FA0;
+  --pale:#FFE0EB;
+  --spot:#1ED760;
+  --ink:#0E000D;
+  --paper:#FFF3F7;
+  --navy:#080818;
+  --purple:#2D0050;
+  --display:'Archivo Black',sans-serif;
+  --body:'Inter',sans-serif;
+}
+html,body{width:100%;height:100%;overflow:hidden;font-family:var(--body);background:var(--deep)}
+
+/* ── DESKTOP BLOCK ── */
+#desktop-block{
+  display:none;position:fixed;inset:0;background:var(--pink);z-index:9999;
+  flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px;
+}
+.db-icon{width:60px;height:52px;margin-bottom:20px;color:#fff}
+#desktop-block h1{font-family:var(--display);font-size:24px;color:#fff;margin-bottom:10px}
+#desktop-block p{font-size:14px;color:rgba(255,255,255,.75);max-width:280px;line-height:1.5}
+.dev-hint{margin-top:18px;font-size:12px;color:rgba(255,255,255,.45);background:rgba(0,0,0,.1);padding:9px 16px;border-radius:10px}
+
+/* ── APP ── */
+#app{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+.screen{position:relative;width:100%;height:100%;max-width:430px;overflow:hidden;background:var(--deep)}
+
+/* ── PROGRESS ── */
+.prog{position:absolute;top:0;left:0;right:0;display:flex;gap:3px;padding:10px 10px 0;z-index:50}
+.seg{flex:1;height:3px;background:rgba(255,255,255,.2);border-radius:99px;overflow:hidden}
+.seg .fill{height:100%;width:0;background:#fff;border-radius:99px}
+
+/* ── TOP BAR ── */
+.top-bar{
+  position:absolute;top:22px;left:0;right:0;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 14px;z-index:40;
+}
+.top-btn{
+  color:#fff;width:32px;height:32px;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:50%;background:rgba(0,0,0,.2);
+}
+.top-btn svg{width:16px;height:16px}
+.brand-ph{width:22px;height:19px;animation:beat 1.4s ease-in-out infinite;color:var(--pink)}
+
+/* ── STORIES ── */
+.story-wrap{position:absolute;inset:0}
+.story{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  padding:78px 26px 96px;
+  opacity:0;visibility:hidden;
+  transform:scale(1.04) translateX(8px);
+  transition:opacity .5s ease,transform .6s cubic-bezier(.22,1,.36,1),visibility 0s .6s;
+  pointer-events:none;
+}
+.story.active{
+  opacity:1;visibility:visible;transform:scale(1) translateX(0);
+  transition:opacity .45s ease,transform .55s cubic-bezier(.22,1,.36,1);
+  pointer-events:auto;
+}
+.story.exit-left{
+  opacity:0;visibility:visible;transform:scale(.96) translateX(-10px);
+  transition:opacity .4s ease,transform .5s cubic-bezier(.22,1,.36,1);
+}
+
+/* ── BG LAYER (each story has one) ── */
+.story-bg{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.story>*:not(.story-bg){position:relative;z-index:1}
+
+/* ── TAP ZONES ── */
+.tap-zones{position:absolute;inset:0;display:flex;z-index:10}
+.tap-prev{width:35%;height:100%;flex-shrink:0}
+.tap-next{width:65%;height:100%;flex-shrink:0}
+
+/* ── ANIM ── */
+.anim{opacity:0;transform:translateY(16px)}
+.story.active .anim{animation:floatIn .65s cubic-bezier(.22,1,.36,1) forwards}
+.story.active .a1{animation-delay:.1s}.story.active .a2{animation-delay:.22s}
+.story.active .a3{animation-delay:.34s}.story.active .a4{animation-delay:.48s}
+.story.active .a5{animation-delay:.62s}.story.active .a6{animation-delay:.76s}
+.story.active .a7{animation-delay:.9s}.story.active .a8{animation-delay:1.04s}
+@keyframes floatIn{to{opacity:1;transform:translateY(0)}}
+
+.pop{opacity:0;transform:scale(.55)}
+.story.active .pop{animation:popIn .8s cubic-bezier(.34,1.56,.64,1) forwards}
+.story.active .pd1{animation-delay:.08s}.story.active .pd2{animation-delay:.2s}
+.story.active .pd3{animation-delay:.35s}
+@keyframes popIn{to{opacity:1;transform:scale(1)}}
+
+@keyframes beat{0%,100%{transform:scale(1)}40%{transform:scale(1.14)}60%{transform:scale(1)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+
+/* ── FLOATING HEARTS / PARTICLES ── */
+.fheart{position:absolute;pointer-events:none;animation:floatUp linear forwards}
+@keyframes floatUp{0%{transform:translateY(0) rotate(-5deg);opacity:.9}100%{transform:translateY(-115vh) rotate(10deg);opacity:0}}
+
+/* ── SHARE BTN BASE ── */
+.btn-pill{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  font-weight:700;font-size:14px;padding:13px 24px;border-radius:99px;
+  transition:transform .15s;
+}
+.btn-pill:active{transform:scale(.96)}
+.btn-light{background:var(--paper);color:var(--ink);box-shadow:0 4px 18px rgba(0,0,0,.2)}
+.btn-dark{background:var(--ink);color:#fff;box-shadow:0 4px 16px rgba(0,0,0,.3)}
+.btn-pink{background:var(--pink);color:#fff;box-shadow:0 6px 22px rgba(240,48,104,.45)}
+.btn-spot{background:var(--spot);color:var(--ink);box-shadow:0 4px 16px rgba(30,215,96,.3)}
+
+.share-fixed{position:absolute;bottom:34px;left:0;right:0;display:flex;justify-content:center;z-index:20}
+
+/* ══════════════════════════════════
+   S1 — INTRO
+══════════════════════════════════ */
+.s-intro{background:var(--deep);align-items:center;justify-content:center;text-align:center;overflow:hidden}
+.intro-heart{
+  width:148px;height:130px;margin-bottom:28px;
+  position:relative;z-index:2;animation:beat 1.4s ease-in-out infinite;color:var(--pink);
+}
+.intro-title{font-family:var(--display);font-size:34px;color:var(--pale);letter-spacing:.5px;line-height:1.1;margin-bottom:10px;position:relative;z-index:2}
+.intro-since{font-size:13px;color:rgba(255,255,255,.4);letter-spacing:2px;text-transform:uppercase;position:relative;z-index:2}
+
+/* ══════════════════════════════════
+   S2 — CARROSSEL
+══════════════════════════════════ */
+.s-carousel{padding:0;overflow:hidden;background:var(--deep)}
+.carousel-wrap{position:absolute;inset:0}
+.car-slide{
+  position:absolute;inset:0;opacity:0;
+  transition:opacity .7s cubic-bezier(.4,0,.2,1);
+  background:var(--deep);
+}
+.car-slide.car-visible{opacity:1}
+.car-slide img{width:100%;height:100%;object-fit:cover;display:block}
+.car-slide .car-ph-fallback{
+  width:100%;height:100%;
+  background:linear-gradient(135deg,#3A001F 0%,#B01752 50%,#F03068 100%);
+  display:flex;align-items:center;justify-content:center;
+}
+.car-slide .car-ph-fallback svg{width:60px;height:60px;opacity:.25;color:#fff}
+.car-slide::before{content:'';position:absolute;top:0;left:0;right:0;height:130px;background:linear-gradient(to bottom,rgba(14,0,13,.75),transparent);z-index:2;pointer-events:none}
+.car-slide::after{content:'';position:absolute;bottom:0;left:0;right:0;height:160px;background:linear-gradient(to top,rgba(14,0,13,.75),transparent);z-index:2;pointer-events:none}
+.car-label{
+  position:absolute;bottom:55px;left:0;right:0;text-align:center;
+  z-index:5;pointer-events:none;
+  font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;
+  color:rgba(255,255,255,.7);
+}
+.car-counter{position:absolute;bottom:34px;right:18px;font-size:10px;font-weight:700;letter-spacing:1px;color:rgba(255,255,255,.5);z-index:15}
+.car-dots{position:absolute;bottom:28px;left:0;right:0;display:flex;justify-content:center;gap:5px;z-index:10}
+.car-dot{height:5px;border-radius:3px;background:rgba(255,255,255,.35);transition:all .35s ease}
+.car-dot.active{background:#fff}
+
+/* ══════════════════════════════════
+   S3 — DIAS
+══════════════════════════════════ */
+.s-dias{
+  background:linear-gradient(145deg,#6A0030 0%,#B01752 45%,#F03068 100%);
+  color:#fff;align-items:center;justify-content:center;text-align:center;overflow:hidden;
+}
+.dias-eyebrow{font-size:10px;font-weight:700;letter-spacing:3.5px;text-transform:uppercase;opacity:.6;margin-bottom:8px}
+.dias-num{
+  font-family:var(--display);font-size:clamp(96px,27vw,148px);
+  line-height:1;letter-spacing:-6px;
+  text-shadow:-3px 3px 0 rgba(0,0,0,.2);margin-bottom:8px;
+}
+.dias-label{font-size:18px;font-weight:700;letter-spacing:.5px;margin-bottom:4px}
+.dias-since{font-size:12px;opacity:.65;margin-bottom:28px;letter-spacing:.5px}
+.dias-stats{display:flex;gap:36px;justify-content:center;margin-bottom:20px}
+.stat-n{font-family:var(--display);font-size:30px;letter-spacing:-1px}
+.stat-l{font-size:10px;opacity:.6;text-transform:uppercase;letter-spacing:2px;margin-top:3px}
+/* live timer */
+.dias-live-wrap{display:flex;flex-direction:column;align-items:center;gap:4px}
+.dias-live-label{font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;opacity:.5}
+.dias-live{
+  font-family:var(--display);font-size:22px;letter-spacing:2px;
+  color:rgba(255,255,255,.9);
+  background:rgba(0,0,0,.15);padding:6px 18px;border-radius:99px;
+}
+.dias-live-sub{font-size:10px;opacity:.55;letter-spacing:.5px}
+
+/* ══════════════════════════════════
+   S4 — MOMENTOS
+══════════════════════════════════ */
+.s-momentos{background:var(--deep);color:#fff;align-items:stretch;justify-content:center;overflow:hidden}
+.mom-heading{font-family:var(--display);font-size:18px;letter-spacing:.5px;margin-bottom:18px}
+.mom-heading em{color:var(--petal);font-style:normal}
+.mom-list{list-style:none;display:flex;flex-direction:column;gap:11px;position:relative;z-index:2}
+.mom-card{
+  display:flex;align-items:center;gap:0;
+  background:rgba(240,48,104,.08);border:1px solid rgba(240,48,104,.18);
+  border-radius:14px;overflow:hidden;
+}
+.mom-photo{
+  width:80px;height:80px;flex-shrink:0;
+  background:linear-gradient(135deg,rgba(176,23,82,.35),rgba(240,48,104,.2));
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+}
+.mom-photo img{width:100%;height:100%;object-fit:cover;display:block;position:absolute;inset:0}
+.mom-photo .no-img-ph{color:rgba(255,255,255,.2)}
+.mom-pin{color:var(--petal)}
+.mom-body{padding:10px 14px 10px 12px;flex:1;min-width:0}
+.mom-lugar{font-family:var(--display);font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--pale);margin-bottom:4px}
+.mom-desc{font-size:13px;color:rgba(255,255,255,.6);line-height:1.4}
+
+/* ══════════════════════════════════
+   S5 — MÚSICA
+══════════════════════════════════ */
+.s-musica{background:#070911;color:#fff;align-items:center;justify-content:center;text-align:center;overflow:hidden}
+.mus-eyebrow{font-size:10px;font-weight:700;letter-spacing:3.5px;text-transform:uppercase;color:var(--spot);margin-bottom:14px}
+.mus-art{
+  width:195px;height:195px;margin:0 auto 24px;
+  border-radius:10px;overflow:hidden;
+  box-shadow:0 20px 55px rgba(240,48,104,.45);position:relative;
+  background:linear-gradient(135deg,var(--velvet),var(--pink) 60%,var(--petal));
+}
+.mus-art img{width:100%;height:100%;object-fit:cover;display:block}
+.now-playing{
+  position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);
+  background:var(--spot);color:var(--ink);
+  font-size:10px;font-weight:800;letter-spacing:.5px;
+  padding:5px 12px;border-radius:99px;
+  display:flex;align-items:center;gap:5px;white-space:nowrap;z-index:3;
+}
+.eq{display:flex;gap:2px;align-items:flex-end}
+.eq span{width:3px;background:var(--ink);border-radius:1px;animation:eqB .4s ease-in-out infinite alternate}
+.eq span:nth-child(1){height:7px;animation-delay:0s}.eq span:nth-child(2){height:13px;animation-delay:.12s}
+.eq span:nth-child(3){height:5px;animation-delay:.24s}.eq span:nth-child(4){height:10px;animation-delay:.07s}
+@keyframes eqB{to{height:3px}}
+.mus-title{font-family:var(--display);font-size:30px;letter-spacing:-.5px;margin-bottom:5px}
+.mus-artist{font-size:14px;color:rgba(255,255,255,.5);margin-bottom:18px}
+.mus-phs{display:flex;gap:8px;justify-content:center;color:var(--pink)}
+.mus-phs span{animation:pulse 1.5s ease-in-out infinite}
+.mus-phs span:nth-child(2){animation-delay:.18s}.mus-phs span:nth-child(3){animation-delay:.36s}
+
+/* ══════════════════════════════════
+   S5 — MINUTOS
+══════════════════════════════════ */
+/* New song story accent colors */
+/* song icon inside mus-art for trackless stories */
+.song-icon{width:100%;height:100%;display:flex;align-items:center;justify-content:center;opacity:.7}
+.s-mins{
+  background:linear-gradient(155deg,#FFB0C4 0%,#F03068 40%,#B01752 100%);
+  color:#fff;align-items:center;justify-content:center;text-align:center;overflow:hidden;
+}
+.mins-eyebrow{font-size:10px;font-weight:700;letter-spacing:3.5px;text-transform:uppercase;opacity:.7;margin-bottom:8px}
+.mins-num{
+  font-family:var(--display);font-size:clamp(60px,16vw,96px);
+  letter-spacing:-3px;line-height:1;text-shadow:-3px 3px 0 rgba(0,0,0,.18);margin-bottom:8px;
+}
+.mins-unit{font-size:20px;font-weight:700;margin-bottom:20px}
+.mins-equiv{font-size:15px;line-height:1.65;opacity:.9;max-width:265px}
+.mins-equiv b{font-weight:900}
+
+/* ══════════════════════════════════
+   S8 — PARA SEMPRE (LOVE)
+══════════════════════════════════ */
+.s-love{
+  background:var(--deep);color:#fff;
+  align-items:center;justify-content:flex-start;
+  overflow:hidden;padding-top:86px;padding-bottom:80px;
+}
+.love-eyebrow{font-size:9px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--petal);margin-bottom:10px;text-align:center}
+.love-heart{
+  width:72px;height:63px;margin:0 auto 14px;
+  animation:beat 1.4s ease-in-out infinite;color:var(--pink);
+}
+.love-title{
+  font-family:var(--display);font-size:clamp(38px,10vw,54px);letter-spacing:-2px;line-height:1;
+  background:linear-gradient(135deg,var(--pale) 0%,var(--pink) 55%,var(--velvet) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:18px;text-align:center;
+}
+.love-text{
+  font-size:14px;line-height:1.85;color:rgba(255,255,255,.75);
+  text-align:center;max-width:280px;margin:0 auto;
+}
+.love-text em{color:var(--petal);font-style:normal;font-weight:700}
+.love-forever{
+  font-family:var(--display);font-size:16px;letter-spacing:2px;
+  color:var(--pink);text-align:center;margin-top:16px;opacity:.9;
+}
+
+/* ══════════════════════════════════
+   S9 — FINAL
+══════════════════════════════════ */
+.s-final{background:var(--deep);color:#fff;align-items:center;justify-content:center;text-align:center;overflow:hidden}
+#confetti-wrap{position:absolute;inset:0;pointer-events:none;z-index:1;overflow:hidden}
+.confetti-h{position:absolute;animation:cFall linear forwards;pointer-events:none}
+@keyframes cFall{0%{transform:translateY(-30px) rotate(0deg);opacity:1}100%{transform:translateY(110vh) rotate(540deg);opacity:0}}
+.final-occasion{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--petal);margin-bottom:14px;position:relative;z-index:2}
+.final-heart{width:160px;height:140px;margin:0 auto 16px;position:relative;z-index:2;animation:beat 1.4s ease-in-out infinite}
+.final-teamo{
+  font-family:var(--display);font-size:clamp(68px,19vw,96px);letter-spacing:-3px;line-height:1;
+  background:linear-gradient(135deg,var(--pale) 0%,var(--pink) 55%,var(--velvet) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:16px;position:relative;z-index:2;
+}
+.final-msg{font-size:14px;line-height:1.7;color:rgba(255,255,255,.65);max-width:270px;margin:0 auto 8px;position:relative;z-index:2}
+.final-msg strong{color:var(--petal);font-weight:700}
+.final-joke{font-size:11px;color:rgba(255,255,255,.35);margin-bottom:28px;position:relative;z-index:2;letter-spacing:.5px}
+.final-actions{display:flex;flex-direction:column;align-items:center;gap:10px;position:relative;z-index:25;width:100%}
+.final-actions .btn-pill{width:100%;max-width:280px;justify-content:center;white-space:nowrap}
+
+/* ── AUDIO PROMPT ── */
+#audio-prompt{
+  position:absolute;inset:0;background:var(--deep);color:var(--paper);z-index:100;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:40px;
+}
+.ap-heart{width:76px;height:66px;margin-bottom:22px;animation:beat 1.4s ease-in-out infinite;color:var(--pink)}
+#audio-prompt h2{font-family:var(--display);font-size:26px;line-height:1.2;margin-bottom:12px}
+#audio-prompt h2 em{color:var(--pink);font-style:normal}
+#audio-prompt p{font-size:13px;color:rgba(255,255,255,.5);line-height:1.6;margin-bottom:30px;max-width:255px}
+
+/* ── TOAST ── */
+#toast{
+  position:fixed;bottom:80px;left:50%;
+  transform:translateX(-50%) translateY(14px);
+  background:rgba(14,0,13,.9);color:var(--paper);border:1px solid rgba(255,255,255,.1);
+  backdrop-filter:blur(10px);
+  padding:10px 18px;border-radius:99px;
+  font-size:13px;font-weight:600;z-index:200;
+  opacity:0;transition:all .3s ease;white-space:nowrap;
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── NOW PLAYING BADGE ── */
+#now-playing-badge{
+  position:absolute;bottom:88px;left:50%;transform:translateX(-50%);
+  background:rgba(0,0,0,.55);backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.12);
+  padding:7px 14px;border-radius:99px;
+  display:none;align-items:center;gap:8px;z-index:30;
+  max-width:250px;white-space:nowrap;overflow:hidden;
+  transition:opacity .3s;
+}
+#now-playing-badge.show{display:flex}
+.npb-eq{display:flex;gap:2px;align-items:flex-end}
+.npb-eq span{width:3px;background:var(--spot);border-radius:1px;animation:eqB .4s ease-in-out infinite alternate}
+.npb-eq span:nth-child(1){height:6px;animation-delay:0s}
+.npb-eq span:nth-child(2){height:11px;animation-delay:.1s}
+.npb-eq span:nth-child(3){height:4px;animation-delay:.2s}
+#npb-title{font-size:11px;font-weight:700;color:#fff;overflow:hidden;text-overflow:ellipsis}
+
+@media(min-width:821px){#desktop-block{display:flex}#app{display:none}}
+@media(max-width:380px){.story{padding:74px 20px 90px}}
+</style>
+</head>
+<body>
+
+<div id="desktop-block">
+  <svg class="db-icon" viewBox="0 0 14 12" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" fill="currentColor">
+    <rect x="2" y="0" width="4" height="2"/><rect x="8" y="0" width="4" height="2"/>
+    <rect x="0" y="2" width="14" height="4"/>
+    <rect x="2" y="6" width="10" height="2"/><rect x="4" y="8" width="6" height="2"/>
+    <rect x="6" y="10" width="2" height="2"/>
+  </svg>
+  <h1>Abre no celular</h1>
+  <p>Essa homenagem foi feita para a tela do celular.</p>
+  <div class="dev-hint">Para testar: F12 → modo dispositivo → recarregue.</div>
+</div>
+
+<div id="app">
+<div class="screen" id="screen">
+
+  <div class="prog" id="prog"></div>
+
+  <div class="top-bar">
+    <button class="top-btn" id="back-btn" aria-label="Voltar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <div>
+      <svg class="brand-ph" viewBox="0 0 14 12" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" fill="currentColor">
+        <rect x="2" y="0" width="4" height="2"/><rect x="8" y="0" width="4" height="2"/>
+        <rect x="0" y="2" width="14" height="4"/>
+        <rect x="2" y="6" width="10" height="2"/><rect x="4" y="8" width="6" height="2"/>
+        <rect x="6" y="10" width="2" height="2"/>
+      </svg>
+    </div>
+    <button class="top-btn" id="sound-btn">
+      <svg id="ico-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+      <svg id="ico-off" style="display:none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+    </button>
+  </div>
+
+  <div class="story-wrap">
+
+    <!-- S0: INTRO -->
+    <div class="story s-intro" data-duration="5000" data-trackname="Amado">
+      <div class="story-bg" id="bg-s0"></div>
+      <svg class="intro-heart pop pd1" viewBox="0 0 14 12" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" fill="currentColor">
+        <rect x="2" y="0" width="4" height="2"/><rect x="8" y="0" width="4" height="2"/>
+        <rect x="0" y="2" width="14" height="4"/>
+        <rect x="2" y="6" width="10" height="2"/><rect x="4" y="8" width="6" height="2"/>
+        <rect x="6" y="10" width="2" height="2"/>
+      </svg>
+      <div class="intro-title anim a2">NOSSA<br>WRAPPED</div>
+      <div class="intro-since anim a3">desde 3 de setembro de 2024</div>
+    </div>
+
+    <!-- S1: CARROSSEL -->
+    <div class="story s-carousel" data-duration="0" data-trackname="Nosso Primeiro Beijo" id="s-carousel">
+      <div class="story-bg" id="bg-s1"></div>
+      <div class="carousel-wrap" id="carousel-wrap"></div>
+      <div class="car-counter" id="car-counter"></div>
+      <div class="car-dots" id="car-dots"></div>
+    </div>
+
+    <!-- S2: DIAS -->
+    <div class="story s-dias" data-duration="9000" data-trackname="Sentimental">
+      <div class="story-bg" id="bg-s2"></div>
+      <div class="dias-eyebrow anim a1">nós dois juntos há</div>
+      <div class="dias-num anim a2" id="dias-num">0</div>
+      <div class="dias-label anim a3">dias</div>
+      <div class="dias-since anim a4">desde 3 de setembro de 2024</div>
+      <div class="dias-stats anim a5">
+        <div><div class="stat-n" id="meses-n">0</div><div class="stat-l">meses</div></div>
+        <div><div class="stat-n" id="semanas-n">0</div><div class="stat-l">semanas</div></div>
+      </div>
+      <div class="dias-live-wrap anim a6">
+        <div class="dias-live-label">e contando...</div>
+        <div class="dias-live" id="dias-live">00:00:00</div>
+        <div class="dias-live-sub" id="dias-live-sub">horas · minutos · segundos</div>
+      </div>
+    </div>
+
+    <!-- S3: MOMENTOS -->
+    <div class="story s-momentos" data-duration="9000" data-trackname="Psiu">
+      <div class="story-bg" id="bg-s3"></div>
+      <div class="mom-heading anim a1"><em>NOSSOS</em> MOMENTOS</div>
+      <ul class="mom-list" id="mom-list"></ul>
+    </div>
+
+    <!-- S4: MÚSICA (Ainda Bem) -->
+    <div class="story s-musica" data-duration="7000" data-trackname="Ainda Bem">
+      <div class="story-bg" id="bg-s4"></div>
+      <div class="mus-eyebrow anim a1">nossa música</div>
+      <div class="mus-art pop pd2">
+        <img src="https://i.scdn.co/image/ab67616d0000b273d26bf695e55bc8efe5f35619" alt="Ainda Bem" onerror="this.style.display='none'">
+        <div class="now-playing">
+          <div class="eq"><span></span><span></span><span></span><span></span></div>
+          tocando agora
+        </div>
+      </div>
+      <div class="mus-title anim a3">Ainda Bem</div>
+      <div class="mus-artist anim a4">Vanessa Da Mata</div>
+      <div class="mus-phs anim a5">
+        <span><svg width="16" height="14" viewBox="0 0 14 12" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" fill="currentColor"><rect x="2" y="0" width="4" height="2"/><rect x="8" y="0" width="4" height="2"/><rect x="0" y="2" width="14" height="4"/><rect x="2" y="6" width="10" height="2"/><rect x="4" y="8" width="6" height="2"/><rect x="6" y="10" width="2" height="2"/></svg></span>
+        <span><svg width="16" height="14" viewBox="0 0 14 12" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" fill="currentColor"><rect x="2" y="0" width="4" height="2"/><rect x="8" y="0" width="4" height="2"/><rect x="0" y="2" width="14" height="4"/><rect x="2" y="6" width="10" height="2"/><rect x="4" y="8" width="6" height="2"/><rect x="6" y="10" width="2" height="2"/></svg></span>
+        <span><svg width="16" height="14" viewBox="0 0 14 12" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" fill="currentColor"><rect x="2" y="0" width="4" height="2"/><rect x="8" y="0" width="4" height="2"/><rect x="0" y="2" width="14" height="4"/><rect x="2" y="6" width="10" height="2"/><rect x="4" y="8" width="6" height="2"/><rect x="6" y="10" width="2" height="2"/></svg></span>
+      </div>
+    </div>
+
+    <!-- S5: MINUTOS -->
+    <div class="story s-mins" data-duration="7000" data-trackname="Amado">
+      <div class="story-bg" id="bg-s5"></div>
+      <div class="mins-eyebrow anim a1">juntos, nós ouvimos</div>
+      <div class="mins-num anim a2" id="mins-num">0</div>
+      <div class="mins-unit anim a3">minutos de música</div>
+      <div class="mins-equiv anim a4" id="mins-equiv">
+        Isso é mais de <b>26 dias</b> de música.<br>Cada acorde, nosso.
+      </div>
+    </div>
+
+    <!-- S6: PARA SEMPRE (LOVE) -->
+    <div class="story s-love" data-duration="16000" data-trackname="Nosso Primeiro Beijo">
+      <div class="story-bg" id="bg-s6"></div>
+      <div class="love-eyebrow anim a1">uma mensagem especial</div>
+      <svg class="love-heart pop pd1" viewBox="0 0 14 12" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" fill="currentColor">
+        <rect x="2" y="0" width="4" height="2"/><rect x="8" y="0" width="4" height="2"/>
+        <rect x="0" y="2" width="14" height="4"/>
+        <rect x="2" y="6" width="10" height="2"/><rect x="4" y="8" width="6" height="2"/>
+        <rect x="6" y="10" width="2" height="2"/>
+      </svg>
+      <div class="love-title anim a2">PARA SEMPRE</div>
+      <div class="love-text anim a3">
+        Eu agradeço todo dia por ter encontrado
+        <em>você</em>, amor. Você é perfeito.
+        Obrigado por me escolher.
+        <br><br>
+        Te amo muito mesmo, meu lindo.
+        Sou muito grato em ter <em>você</em>
+        como namorado e parceiro de vida...
+      </div>
+      <div class="love-forever anim a5">
+        <svg width="12" height="10" viewBox="0 0 14 12" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" fill="currentColor"><rect x="2" y="0" width="4" height="2"/><rect x="8" y="0" width="4" height="2"/><rect x="0" y="2" width="14" height="4"/><rect x="2" y="6" width="10" height="2"/><rect x="4" y="8" width="6" height="2"/><rect x="6" y="10" width="2" height="2"/></svg>
+        Para sempre nós
+        <svg width="12" height="10" viewBox="0 0 14 12" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" fill="currentColor"><rect x="2" y="0" width="4" height="2"/><rect x="8" y="0" width="4" height="2"/><rect x="0" y="2" width="14" height="4"/><rect x="2" y="6" width="10" height="2"/><rect x="4" y="8" width="6" height="2"/><rect x="6" y="10" width="2" height="2"/></svg>
+      </div>
+    </div>
+
+    <!-- S7: FINAL -->
+    <div class="story s-final" data-duration="999999" data-trackname="">
+      <div class="story-bg" id="bg-s7"></div>
+      <div id="confetti-wrap"></div>
+      <div class="final-occasion anim a1">Feliz Dia dos Namorados</div>
+      <svg class="final-heart pop pd2" viewBox="0 0 100 87" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="hg" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#FF7FA0"/>
+            <stop offset="55%" stop-color="#F03068"/>
+            <stop offset="100%" stop-color="#B01752"/>
+          </linearGradient>
+          <filter id="glow" x="-25%" y="-25%" width="150%" height="150%">
+            <feGaussianBlur stdDeviation="5" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <path d="M50 82 C30 65,5 50,5 28 C5 12,17 6,30 10 C38 13,46 21,50 28 C54 21,62 13,70 10 C83 6,95 12,95 28 C95 50,70 65,50 82Z" fill="url(#hg)" filter="url(#glow)"/>
+      </svg>
+      <div class="final-teamo anim a2">TE AMO</div>
+      <div class="final-msg anim a3">
+        Desde 3 de setembro de 2024, cada música que ouço<br>tem gosto de <strong>você</strong>.
+      </div>
+      <div class="final-joke anim a4">(é simbólico porque sou pobre, mas o amor é de graça)</div>
+      <div class="final-actions anim a5">
+        <button class="btn-pill btn-pink" id="replay-btn" style="font-size:16px;padding:14px 36px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+          Recomeçar
+        </button>
+      </div>
+    </div>
+
+  </div><!-- /story-wrap -->
+
+  <!-- Now Playing Badge -->
+  <div id="now-playing-badge">
+    <div class="npb-eq"><span></span><span></span><span></span></div>
+    <span id="npb-title"></span>
+  </div>
+
+  <!-- Audio Prompt -->
+  <div id="audio-prompt">
+    <svg class="ap-heart" viewBox="0 0 100 87" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+      <path d="M50 82 C30 65,5 50,5 28 C5 12,17 6,30 10 C38 13,46 21,50 28 C54 21,62 13,70 10 C83 6,95 12,95 28 C95 50,70 65,50 82Z"/>
+    </svg>
+    <h2>Uma <em>homenagem</em><br>especial te espera</h2>
+    <p>Toque para começar com a música de vocês tocando.</p>
+    <button class="btn-pill btn-pink" id="start-btn" style="margin-top:4px">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      Começar
+    </button>
+  </div>
+
+  <div class="tap-zones">
+    <div class="tap-prev" id="tap-prev"></div>
+    <div class="tap-next" id="tap-next"></div>
+  </div>
+
+  <audio id="music" loop preload="none"></audio>
+
+  <div id="toast"></div>
+
+</div>
+</div>
+
+<script>
+/* ═══════════════════════════════════
+   CONFIG
+═══════════════════════════════════ */
+const C = {
+  startDate: '2024-09-03',
+  minutesTogether: 38760,
+  previewUrl: 'https://p.scdn.co/mp3-preview/907349073552e1af6bb9dc25513ad87b40599c00',
+  carouselPhotos: [
+    { src: 'foto_01.jpg', label: null },
+    { src: 'foto_02.jpg', label: null },
+    { src: 'foto_03.jpg', label: null },
+    { src: 'foto_04.jpg', label: null },
+    { src: 'foto_05.jpg', label: null },
+    { src: 'chapada.jpg', label: 'Chapada dos Veadeiros' },
+    { src: 'caldas.jpg',  label: 'Caldas Novas' },
+    { src: 'mararosa.jpg',label: 'Mara Rosa' },
+  ],
+  momentos: [
+    { foto: 'chapada.jpg',  lugar: 'Chapada dos Veadeiros', desc: 'Aquela viagem que virou historinha pra contar' },
+    { foto: 'caldas.jpg',   lugar: 'Caldas Novas',          desc: 'O calor de lá tinha concorrência' },
+    { foto: 'mararosa.jpg', lugar: 'Mara Rosa',             desc: 'Quando você conheceu minha família doida e sobreviveu' },
+  ],
+  shareMsg: 'Feliz Dia dos Namorados! Desde 3 de setembro de 2024, cada música tem gosto de você. Te amo.',
+};
+
+/* ═══════════════════════════════════
+   PIXEL HELPERS
+═══════════════════════════════════ */
+const PH = (sz, col) =>
+  `<svg width="${sz}" height="${Math.round(sz*12/14)}" viewBox="0 0 14 12" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" fill="${col}">
+    <rect x="2" y="0" width="4" height="2"/><rect x="8" y="0" width="4" height="2"/>
+    <rect x="0" y="2" width="14" height="4"/>
+    <rect x="2" y="6" width="10" height="2"/><rect x="4" y="8" width="6" height="2"/>
+    <rect x="6" y="10" width="2" height="2"/>
+  </svg>`;
+
+const PSTAR = (sz, col) =>
+  `<svg width="${sz}" height="${sz}" viewBox="0 0 5 5" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" fill="${col}">
+    <rect x="2" y="0" width="1" height="1"/>
+    <rect x="2" y="4" width="1" height="1"/>
+    <rect x="0" y="2" width="1" height="1"/>
+    <rect x="4" y="2" width="1" height="1"/>
+    <rect x="1" y="1" width="1" height="1"/>
+    <rect x="3" y="1" width="1" height="1"/>
+    <rect x="1" y="3" width="1" height="1"/>
+    <rect x="3" y="3" width="1" height="1"/>
+    <rect x="2" y="2" width="1" height="1"/>
+  </svg>`;
+
+const PNOTE = (sz, col) =>
+  `<svg width="${sz}" height="${Math.round(sz*1.4)}" viewBox="0 0 4 6" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" fill="${col}">
+    <rect x="2" y="0" width="2" height="1"/>
+    <rect x="2" y="1" width="1" height="3"/>
+    <rect x="0" y="3" width="2" height="2"/>
+  </svg>`;
+
+const PIN = `<svg width="10" height="13" viewBox="0 0 12 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M6 0C3.24 0 1 2.24 1 5C1 8.75 6 16 6 16C6 16 11 8.75 11 5C11 2.24 8.76 0 6 0ZM6 7C4.9 7 4 6.1 4 5C4 3.9 4.9 3 6 3C7.1 3 8 3.9 8 5C8 6.1 7.1 7 6 7Z" fill="currentColor"/>
+</svg>`;
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+function showToast(msg) { toast(msg); }
+
+/* ═══════════════════════════════════
+   BACKGROUND ANIMATIONS
+═══════════════════════════════════ */
+function spawnHearts(el, n, cols) {
+  cols = cols || ['#F03068','#FF7FA0','#FFB3C8','#B01752','rgba(255,255,255,.3)'];
+  for (let i = 0; i < n; i++) {
+    const d = document.createElement('div');
+    d.className = 'fheart';
+    const sz = 8 + Math.random() * 22, dur = 5 + Math.random() * 7, del = Math.random() * 8;
+    const col = cols[Math.floor(Math.random() * cols.length)];
+    d.style.cssText = `left:${Math.random()*100}%;bottom:-${sz}px;width:${sz}px;height:${sz*12/14}px;animation-duration:${dur}s;animation-delay:${del}s`;
+    d.innerHTML = PH(sz, col);
+    el.appendChild(d);
+  }
+}
+
+function spawnStars(el, n) {
+  const cols = ['#FFE0EB','#FF7FA0','#fff','rgba(255,255,255,.5)','#1ED760','#FFB3C8'];
+  for (let i = 0; i < n; i++) {
+    const d = document.createElement('div');
+    d.className = 'fheart';
+    const sz = 5 + Math.random() * 14, dur = 4 + Math.random() * 6, del = Math.random() * 7;
+    const col = cols[Math.floor(Math.random() * cols.length)];
+    d.style.cssText = `left:${Math.random()*100}%;bottom:-${sz}px;animation-duration:${dur}s;animation-delay:${del}s`;
+    d.innerHTML = PSTAR(sz, col);
+    el.appendChild(d);
+  }
+}
+
+function spawnNotes(el, n) {
+  const cols = ['rgba(30,215,96,.7)','rgba(255,127,160,.7)','rgba(255,255,255,.5)','#F03068'];
+  for (let i = 0; i < n; i++) {
+    const d = document.createElement('div');
+    d.className = 'fheart';
+    const sz = 10 + Math.random() * 18, dur = 5 + Math.random() * 7, del = Math.random() * 8;
+    const col = cols[Math.floor(Math.random() * cols.length)];
+    d.style.cssText = `left:${Math.random()*100}%;bottom:-${sz}px;animation-duration:${dur}s;animation-delay:${del}s`;
+    d.innerHTML = PNOTE(sz, col);
+    el.appendChild(d);
+  }
+}
+
+function spawnBg(idx) {
+  const bgEl = document.getElementById(`bg-s${idx}`);
+  if (!bgEl) return;
+  bgEl.innerHTML = '';
+  if      (idx === 0) spawnHearts(bgEl, 35);
+  else if (idx === 1) { spawnHearts(bgEl, 15, ['rgba(240,48,104,.2)','rgba(255,127,160,.15)','rgba(255,255,255,.1)']); spawnStars(bgEl, 18); }
+  else if (idx === 2) spawnStars(bgEl, 30);
+  else if (idx === 3) spawnHearts(bgEl, 18, ['rgba(240,48,104,.3)','rgba(255,127,160,.25)','rgba(255,255,255,.15)']);
+  else if (idx === 4) spawnNotes(bgEl, 22);
+  else if (idx === 5) spawnHearts(bgEl, 20, ['rgba(255,255,255,.35)','rgba(240,48,104,.5)','rgba(255,127,160,.45)']);
+  else if (idx === 6) spawnHearts(bgEl, 45, ['#F03068','#FF7FA0','#FFB3C8','#B01752','rgba(255,255,255,.4)','#FFE0EB']);
+  else if (idx === 7) { spawnHearts(bgEl, 25, ['rgba(240,48,104,.3)','rgba(255,127,160,.2)','rgba(255,255,255,.1)']); spawnStars(bgEl, 20); }
+}
+
+/* ═══════════════════════════════════
+   CONFETTI
+═══════════════════════════════════ */
+let confettiOn = false;
+function startConfetti(el) {
+  if (confettiOn) return; confettiOn = true;
+  const cols = ['#F03068','#FF7FA0','#FFB3C8','#B01752','#FFE0EB','#fff'];
+  let n = 0;
+  const go = () => {
+    if (!confettiOn) return;
+    if (n > 80) { setTimeout(go, 500); return; }
+    const d = document.createElement('div');
+    d.className = 'confetti-h';
+    const sz = 10 + Math.random() * 24, dur = 2.5 + Math.random() * 3;
+    d.style.cssText = `left:${Math.random()*100}%;top:0;width:${sz}px;height:${sz*12/14}px;animation-duration:${dur}s`;
+    d.innerHTML = PH(sz, cols[Math.floor(Math.random() * cols.length)]);
+    el.appendChild(d);
+    n++;
+    d.addEventListener('animationend', () => { d.remove(); n--; });
+    setTimeout(go, 100 + Math.random() * 160);
+  };
+  go();
+}
+
+/* ═══════════════════════════════════
+   CAROUSEL
+═══════════════════════════════════ */
+class Carousel {
+  constructor(wrap, dotsEl, counterEl, photos) {
+    this.wrap = wrap; this.dotsEl = dotsEl; this.counterEl = counterEl;
+    this.photos = photos; this.cur = 0; this.slides = []; this.dotEls = [];
+    this.timer = null; this.totalLoaded = 0; this.init();
+  }
+  init() {
+    this.photos.forEach((p, i) => {
+      const slide = document.createElement('div');
+      slide.className = 'car-slide' + (i === 0 ? ' car-visible' : '');
+      const img = document.createElement('img');
+      img.src = p.src; img.alt = p.label || '';
+      img.addEventListener('load', () => this.totalLoaded++);
+      img.onerror = () => {
+        img.style.display = 'none';
+        const fb = document.createElement('div');
+        fb.className = 'car-ph-fallback';
+        fb.innerHTML = PH(60, 'rgba(255,255,255,.15)');
+        slide.appendChild(fb);
+      };
+      slide.appendChild(img);
+      if (p.label) {
+        const lbl = document.createElement('div');
+        lbl.className = 'car-label';
+        lbl.textContent = p.label.toUpperCase();
+        slide.appendChild(lbl);
+      }
+      this.wrap.appendChild(slide); this.slides.push(slide);
+      const dot = document.createElement('div');
+      dot.className = 'car-dot' + (i === 0 ? ' active' : '');
+      dot.style.width = i === 0 ? '18px' : '5px';
+      this.dotsEl.appendChild(dot); this.dotEls.push(dot);
+    });
+    this.updateCounter();
+  }
+  updateCounter() { this.counterEl.textContent = `${this.cur + 1} / ${this.photos.length}`; }
+  goTo(i) {
+    if (i === this.cur) return;
+    this.slides[this.cur].classList.remove('car-visible');
+    this.dotEls[this.cur].classList.remove('active');
+    this.dotEls[this.cur].style.width = '5px';
+    this.cur = ((i % this.photos.length) + this.photos.length) % this.photos.length;
+    this.slides[this.cur].classList.add('car-visible');
+    this.dotEls[this.cur].classList.add('active');
+    this.dotEls[this.cur].style.width = '18px';
+    this.updateCounter();
+  }
+  next() { this.goTo(this.cur + 1); }
+  start(ms = 2800) { this.stop(); this.timer = setInterval(() => this.next(), ms); }
+  stop() { clearInterval(this.timer); this.timer = null; }
+}
+
+const carousel = new Carousel(
+  document.getElementById('carousel-wrap'),
+  document.getElementById('car-dots'),
+  document.getElementById('car-counter'),
+  C.carouselPhotos
+);
+const carStory = document.getElementById('s-carousel');
+carStory.dataset.duration = String(C.carouselPhotos.length * 2800);
+
+/* ═══════════════════════════════════
+   MOMENTOS
+═══════════════════════════════════ */
+const momList = document.getElementById('mom-list');
+C.momentos.forEach((m, i) => {
+  const li = document.createElement('li');
+  li.className = `mom-card anim a${i + 2}`;
+  const ph = document.createElement('div'); ph.className = 'mom-photo';
+  const img = document.createElement('img'); img.src = m.foto; img.alt = m.lugar;
+  img.onerror = () => {
+    img.style.display = 'none';
+    const ico = document.createElement('div'); ico.className = 'no-img-ph mom-pin'; ico.innerHTML = PIN;
+    ph.appendChild(ico);
+  };
+  const pin = document.createElement('div');
+  pin.className = 'mom-pin';
+  pin.style.cssText = 'position:absolute;bottom:5px;right:5px;color:var(--petal)';
+  pin.innerHTML = PIN;
+  ph.appendChild(img); ph.appendChild(pin);
+  const body = document.createElement('div'); body.className = 'mom-body';
+  body.innerHTML = `<div class="mom-lugar">${m.lugar}</div><div class="mom-desc">${m.desc}</div>`;
+  li.appendChild(ph); li.appendChild(body); momList.appendChild(li);
+});
+
+/* ═══════════════════════════════════
+   COUNTERS
+═══════════════════════════════════ */
+function calcStats() {
+  const s = new Date(C.startDate), n = new Date();
+  const days = Math.floor((n - s) / 86400000);
+  const months = (n.getFullYear() - s.getFullYear()) * 12 + n.getMonth() - s.getMonth();
+  return { days, months, weeks: Math.floor(days / 7) };
+}
+
+function animCount(el, target, dur, locale) {
+  const t0 = performance.now();
+  const run = ts => {
+    const p = Math.min((ts - t0) / dur, 1), v = Math.round((1 - Math.pow(1 - p, 3)) * target);
+    el.textContent = locale ? v.toLocaleString('pt-BR') : v;
+    if (p < 1) requestAnimationFrame(run);
+    else el.textContent = locale ? target.toLocaleString('pt-BR') : target;
+  };
+  requestAnimationFrame(run);
+}
+
+/* LIVE TIMER (DIAS slide) */
+let liveTimerInterval = null;
+function startLiveTimer() {
+  if (liveTimerInterval) clearInterval(liveTimerInterval);
+  const el = document.getElementById('dias-live');
+  if (!el) return;
+  const update = () => {
+    const start = new Date(C.startDate);
+    const now = new Date();
+    const totalSecs = Math.floor((now - start) / 1000);
+    const h = Math.floor(totalSecs / 3600);
+    const m = Math.floor((totalSecs % 3600) / 60);
+    const s = totalSecs % 60;
+    el.textContent = String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+  };
+  update();
+  liveTimerInterval = setInterval(update, 1000);
+}
+function stopLiveTimer() { clearInterval(liveTimerInterval); liveTimerInterval = null; }
+
+/* ═══════════════════════════════════
+   MUSIC — Apple Music / iTunes previews
+═══════════════════════════════════ */
+// appleId = track ID direto   → lookup?id=ID
+// albumId = álbum single      → lookup?id=ID&entity=song (pega 1a faixa com preview)
+// q       = busca por texto   → search?term=q
+// fallback= URL direta garantida
+const STORY_MUSIC = [
+  // S0  INTRO      → Amado (Vanessa da Mata)
+  { q: 'Amado Vanessa da Mata',              name: 'Amado'               },
+  // S1  CARROSSEL  → Nosso Primeiro Beijo (Gloria Groove)
+  { q: 'Nosso Primeiro Beijo Gloria Groove', name: 'Nosso Primeiro Beijo'},
+  // S2  DIAS       → Sentimental (Los Hermanos)  – ID direto
+  { appleId: 375340406,                      name: 'Sentimental'         },
+  // S3  MOMENTOS   → Psiu (Vanessa da Mata)       – busca no álbum single
+  { albumId: 1536538537,                     name: 'Psiu'                },
+  // S4  MÚSICA     → Ainda Bem (Vanessa da Mata)  – fallback garantido
+  { q: 'Ainda Bem Vanessa da Mata',          name: 'Ainda Bem',
+    fallback: C.previewUrl                                                },
+  // S5  MINUTOS    → Flamingos (Baco Exu do Blues) – ID direto
+  { appleId: 1442356891,                     name: 'Flamingos'           },
+  // S6  PARA SEMPRE→ Ai, Ai, Ai (Vanessa da Mata) – ID direto
+  { appleId: 288039385,                      name: 'Ai, Ai, Ai'          },
+  // S7  FINAL      → Radar (Gloria Groove)         – ID direto
+  { appleId: 1581826895,                     name: 'Radar'               },
+];
+
+const storyPreviews = new Array(STORY_MUSIC.length).fill(null);
+
+// Busca os previews em background desde o carregamento da página
+(async function loadPreviews() {
+  for (let i = 0; i < STORY_MUSIC.length; i++) {
+    const m = STORY_MUSIC[i];
+    if (!m.appleId && !m.albumId && !m.q) continue; // skip if no music info
+    if (m.fallback) storyPreviews[i] = m.fallback;  // fallback imediato
+
+    try {
+      let url, isAlbum = false;
+      if (m.albumId) {
+        // Álbum/single: busca as faixas, sem filtro de país para máxima compatibilidade
+        url = `https://itunes.apple.com/lookup?id=${m.albumId}&entity=song&limit=10`;
+        isAlbum = true;
+      } else if (m.appleId) {
+        url = `https://itunes.apple.com/lookup?id=${m.appleId}`;
+      } else {
+        url = `https://itunes.apple.com/search?term=${encodeURIComponent(m.q)}&media=music&limit=10&country=BR`;
+      }
+
+      const res = await fetch(url, { cache: 'force-cache' });
+      const data = await res.json();
+
+      let hit;
+      if (isAlbum) {
+        // results[0] = o próprio álbum; results[1+] = faixas
+        hit = (data.results || []).find(r => r.wrapperType === 'track' && r.previewUrl);
+      } else {
+        hit = (data.results || []).find(r => r.previewUrl);
+      }
+
+      if (hit?.previewUrl) {
+        storyPreviews[i] = hit.previewUrl;
+      }
+    } catch(e) { /* mantém fallback se existir */ }
+  }
+})();
+
+const music = document.getElementById('music');
+music.loop = true;
+let muted = false;
+
+function setStoryTrack(storyIdx) {
+  const info = STORY_MUSIC[storyIdx];
+
+  // Update now-playing badge
+  const badge = document.getElementById('now-playing-badge');
+  const titleEl = document.getElementById('npb-title');
+  if (info?.name) {
+    titleEl.textContent = info.name;
+    badge.classList.add('show');
+    clearTimeout(badge._hideTimer);
+    badge._hideTimer = setTimeout(() => badge.classList.remove('show'), 3000);
+  } else {
+    badge.classList.remove('show');
+  }
+
+  // No music info for this story — do nothing
+  if (!info?.appleId && !info?.albumId && !info?.q && !info?.fallback) return;
+
+  const preview = storyPreviews[storyIdx];
+  if (preview) {
+    // only swap src if different (avoids restart on repeat)
+    if (music.src !== preview) {
+      music.pause();
+      music.src = preview;
+    }
+    if (!muted) music.play().catch(() => {});
+  } else {
+    // iTunes still loading — retry every 300ms up to 6s
+    music.pause();
+    let tries = 0;
+    const poll = setInterval(() => {
+      tries++;
+      if (storyPreviews[storyIdx]) {
+        clearInterval(poll);
+        if (storyIdx === cur) {
+          music.src = storyPreviews[storyIdx];
+          if (!muted) music.play().catch(() => {});
+        }
+      } else if (tries > 20) clearInterval(poll);
+    }, 300);
+  }
+}
+
+/* ═══════════════════════════════════
+   STORY CONTROLLER
+═══════════════════════════════════ */
+const stories = document.querySelectorAll('.story');
+const segs = [];
+let cur = 0, fillDur = 0, remainMs = 0, fillStart = 0;
+let stTimer = null, paused = false;
+
+const progEl = document.getElementById('prog');
+stories.forEach(() => {
+  const s = document.createElement('div'); s.className = 'seg';
+  const f = document.createElement('div'); f.className = 'fill';
+  s.appendChild(f); progEl.appendChild(s); segs.push(f);
+});
+
+const ks = document.createElement('style');
+ks.textContent = '@keyframes fillProg{to{width:100%}}';
+document.head.appendChild(ks);
+
+function goTo(idx) {
+  if (idx < 0 || idx >= stories.length) return;
+  clearTimeout(stTimer); paused = false;
+  carousel.stop();
+  stopLiveTimer();
+
+  if (cur >= 0 && cur < stories.length) {
+    stories[cur].classList.remove('active');
+    stories[cur].classList.add('exit-left');
+    const ex = stories[cur];
+    setTimeout(() => ex.classList.remove('exit-left'), 500);
+  }
+
+  segs.forEach((s, i) => {
+    s.style.animation = 'none';
+    s.style.width = i < idx ? '100%' : '0%';
+  });
+
+  cur = idx;
+  stories[cur].classList.add('active');
+  onStoryStart(cur);
+
+  const isCarousel = stories[cur].classList.contains('s-carousel');
+  const dur = parseInt(stories[cur].dataset.duration);
+
+  if (isCarousel) {
+    const actualDur = C.carouselPhotos.length * 2800;
+    fillDur = remainMs = actualDur; fillStart = performance.now();
+    segs[cur].style.animation = 'none'; segs[cur].style.width = '0%';
+    segs[cur].offsetHeight;
+    segs[cur].style.animation = `fillProg ${actualDur}ms linear forwards`;
+    stTimer = setTimeout(() => goTo(cur + 1), actualDur);
+    carousel.start(2800);
+  } else if (dur < 999000) {
+    fillDur = remainMs = dur; fillStart = performance.now();
+    segs[cur].style.animation = 'none'; segs[cur].style.width = '0%';
+    segs[cur].offsetHeight;
+    segs[cur].style.animation = `fillProg ${dur}ms linear forwards`;
+    stTimer = setTimeout(() => goTo(cur + 1), dur);
+  } else {
+    segs[cur].style.width = '100%';
+  }
+}
+
+function pauseStory() {
+  if (paused) return;
+  const d = parseInt(stories[cur].dataset.duration);
+  if (d >= 999000 && !stories[cur].classList.contains('s-carousel')) return;
+  paused = true; clearTimeout(stTimer); carousel.stop();
+  const el = performance.now();
+  remainMs = Math.max(0, fillDur - (el - fillStart));
+  const pct = ((fillDur - remainMs) / fillDur) * 100;
+  segs[cur].style.animation = 'none'; segs[cur].style.width = pct + '%';
+}
+
+function resumeStory() {
+  if (!paused) return; paused = false;
+  segs[cur].style.animation = `fillProg ${remainMs}ms linear forwards`;
+  fillStart = performance.now() - (fillDur - remainMs);
+  stTimer = setTimeout(() => goTo(cur + 1), remainMs);
+  if (cur === 1) carousel.start(2800);
+}
+
+function onStoryStart(i) {
+  // Background animations
+  spawnBg(i);
+
+  // Set music for this story
+  setStoryTrack(i);
+
+  // Story-specific logic
+  if (i === 2) { /* DIAS */
+    const s = calcStats();
+    animCount(document.getElementById('dias-num'), s.days, 1800);
+    setTimeout(() => {
+      animCount(document.getElementById('meses-n'), s.months, 900);
+      animCount(document.getElementById('semanas-n'), s.weeks, 900);
+    }, 500);
+    setTimeout(() => startLiveTimer(), 700);
+  }
+  if (i === 5) { /* MINUTOS */
+    animCount(document.getElementById('mins-num'), C.minutesTogether, 2000, true);
+    const d = Math.round(C.minutesTogether / 1440);
+    document.getElementById('mins-equiv').innerHTML = `Isso é mais de <b>${d} dias</b> de música.<br>Cada acorde, nosso.`;
+  }
+  if (i === 7) { /* FINAL */
+    const w = document.getElementById('confetti-wrap'); w.innerHTML = ''; confettiOn = false;
+    setTimeout(() => startConfetti(w), 500);
+  }
+}
+
+/* ── NAV ── */
+function setupTap(el, onTap) {
+  let holding = false, t0 = 0, ht = null;
+  el.addEventListener('pointerdown', () => { t0 = Date.now(); holding = false; ht = setTimeout(() => { holding = true; pauseStory(); }, 220); });
+  el.addEventListener('pointerup', () => { clearTimeout(ht); if (holding) { resumeStory(); return; } if (Date.now() - t0 < 650) onTap(); });
+  el.addEventListener('pointerleave', () => { clearTimeout(ht); if (holding) { resumeStory(); holding = false; } });
+}
+setupTap(document.getElementById('tap-prev'), () => goTo(cur - 1));
+setupTap(document.getElementById('tap-next'), () => goTo(cur + 1));
+document.getElementById('back-btn').addEventListener('click', e => { e.stopPropagation(); goTo(cur - 1); });
+document.addEventListener('keydown', e => { if (e.key === 'ArrowRight') goTo(cur + 1); if (e.key === 'ArrowLeft') goTo(cur - 1); });
+
+document.getElementById('replay-btn').addEventListener('click', e => {
+  e.stopPropagation();
+  confettiOn = false;
+  carousel.goTo(0);
+  music.pause();
+  music.currentTime = 0;
+  music.src = '';
+  goTo(0);
+});
+
+
+/* ── MUSIC / MUTE ── */
+function setMute(m) {
+  muted = m;
+  if (m) {
+    music.pause();
+  } else if (music.src) {
+    music.play().catch(() => {});
+  }
+  document.getElementById('ico-on').style.display = m ? 'none' : '';
+  document.getElementById('ico-off').style.display = m ? '' : 'none';
+}
+
+document.getElementById('sound-btn').addEventListener('click', () => setMute(!muted));
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    pauseStory();
+    music.pause();
+  } else {
+    resumeStory();
+    if (!muted && music.src) music.play().catch(() => {});
+  }
+});
+
+/* ── START ── */
+document.getElementById('start-btn').addEventListener('click', () => {
+  document.getElementById('audio-prompt').style.display = 'none';
+  goTo(0);
+  // goTo(0) calls setStoryTrack(0) which handles music
+});
+
+/* ── DEVICE CHECK ── */
+function checkDevice() {
+  document.getElementById('desktop-block').style.display = window.innerWidth > 820 ? 'flex' : 'none';
+  document.getElementById('app').style.display = window.innerWidth > 820 ? 'none' : 'flex';
+}
+checkDevice();
+window.addEventListener('resize', checkDevice);
+</script>
+</body>
+</html>
